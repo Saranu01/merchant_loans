@@ -2,6 +2,7 @@ import sqlite3
 
 class LoanDB:
     def __init__(self):
+        """Connect to database and create loans table if not exists."""
         self.conn = sqlite3.connect("bank.db")  # Create or connect to `bank.db`
         self.cursor = self.conn.cursor()
         self.cursor.execute("""
@@ -17,6 +18,7 @@ class LoanDB:
         self.conn.commit()
 
     def add_loan(self, loan_id, borrower, amount, interest_rate, duration):
+        """Insert a new loan into the database."""
         total_payable = amount + (amount * interest_rate * duration)
         self.cursor.execute("""
             INSERT INTO loans (loan_id, borrower, amount, interest_rate, duration, remaining_balance) 
@@ -26,6 +28,7 @@ class LoanDB:
         print("\n✅ Loan Added Successfully!")
 
     def make_payment(self, loan_id, payment_amount):
+        """Update remaining balance when a payment is made."""
         self.cursor.execute("SELECT remaining_balance FROM loans WHERE loan_id = ?", (loan_id,))
         result = self.cursor.fetchone()
         if result:
@@ -37,6 +40,7 @@ class LoanDB:
             print("\n❌ Loan ID not found!")
 
     def view_loan(self, loan_id):
+        """Retrieve and display a specific loan."""
         self.cursor.execute("SELECT * FROM loans WHERE loan_id = ?", (loan_id,))
         loan = self.cursor.fetchone()
         if loan:
@@ -52,6 +56,7 @@ class LoanDB:
             print("\n❌ Loan ID not found!")
 
     def close_connection(self):
+        """Close the database connection."""
         self.conn.close()
 
 if __name__ == "__main__":
@@ -92,6 +97,7 @@ if __name__ == "__main__":
 from transactions1 import TransactionDB
 
 def make_payment(self, loan_id, payment_amount):
+    """Update remaining balance when a payment is made and record transaction."""
     self.cursor.execute("SELECT remaining_balance FROM loans WHERE loan_id = ?", (loan_id,))
     result = self.cursor.fetchone()
 
